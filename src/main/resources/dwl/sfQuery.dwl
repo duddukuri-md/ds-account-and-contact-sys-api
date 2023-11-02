@@ -1,0 +1,1 @@
+p('sf.get.contact.query') ++ " where Contact_Id__c = '" ++ (vars.contactId default "CID-00035") ++ "'"
