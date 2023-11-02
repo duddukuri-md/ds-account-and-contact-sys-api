@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 				<ee:set-variable resource="dwl/sfAccountQuery.dwl" variableName="sfQuery" />
 				</ee:variables>
 		</ee:transform>
-		<salesforce:query doc:name="Query Contact" doc:id="8c38891a-05fc-46de-b4a6-8cd49b49d06a" config-ref="Salesforce_Config">
+		<salesforce:query doc:name="Query Account" doc:id="8c38891a-05fc-46de-b4a6-8cd49b49d06a" config-ref="Salesforce_Config">
 			<salesforce:salesforce-query ><![CDATA[#[vars.sfQuery]]]></salesforce:salesforce-query>
 		</salesforce:query>
 		<ee:transform doc:name="Contact Response mapping" doc:id="b08d7538-a3bc-44b5-b299-4054f1a52c6d" >

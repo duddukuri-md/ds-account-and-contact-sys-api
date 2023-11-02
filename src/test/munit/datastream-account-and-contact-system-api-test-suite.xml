@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="datastream-account-and-contact-system-api-test-suite.xml" />
+	<munit:test name="datastream-account-and-contact-system-api-test-suite-get:\accounts\(accountId):datastream-account-and-contact-system-api-configTest" doc:id="d63a2d95-cdab-42a1-8288-6053c2c8d581" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Get Accounts" doc:id="f5470185-0dfb-4ab0-950f-aabfff3ff1e5" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Query Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="8c38891a-05fc-46de-b4a6-8cd49b49d06a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://responses/get-account-details.json','application/json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="3d33e8c4-a24b-4326-b7fd-c9d42b6cb3bd">
+				<munit:attributes value="#[output application/json --- readUrl('classpath://attributes/get-accounts-attributes.json','application/json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\accounts\(accountId):datastream-account-and-contact-system-api-config" doc:id="360e9f9e-9123-4421-b38c-c058c89d4887" name="get:\accounts\(accountId):datastream-account-and-contact-system-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="7900664d-7e83-4f8d-a11a-b4beb987c9ac" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End of the flow Logger" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="e7f4f515-03a5-47f2-8e45-8195d90a15ba" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="datastream-account-and-contact-system-api-test-suite-get:\contacts\(contactId):datastream-account-and-contact-system-api-configTest" doc:id="326f66d4-a940-424a-ba57-c752559cedd4" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Upsert Contact" doc:id="86cd97b2-3749-44db-bee3-532b69c8420f" processor="salesforce:upsert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Upsert Contact" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="065eeb81-705f-4d02-b8bf-5c844a2a9102" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://responses/get-contact-details.json','application/json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="cfb0364c-405f-4175-a9cb-5ac85765fee7" >
+				<munit:attributes value="#[output application/json --- readUrl('classpath://attributes/get-contacts-attributes.json','application/json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\contacts\(contactId):datastream-account-and-contact-system-api-config" doc:id="edbf99ee-d002-4925-b689-6789c385be9f" name="get:\contacts\(contactId):datastream-account-and-contact-system-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="6a86f1fb-186f-482e-b4f2-3d6f3e278b4f" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End of the flow Logger" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d5c778d9-f18a-4853-9455-9534431465f8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="datastream-account-and-contact-system-api-test-suite-post:\accounts:application\json:datastream-account-and-contact-system-api-configTest" doc:id="fd2aa810-b1bf-40ae-980e-09e62e843235" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Upsert Account" doc:id="2510e04b-e090-4c11-8238-4f0228e366b8" processor="salesforce:upsert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Upsert Account" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="15e306ee-4ab1-462c-b8d9-ea00f040585e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://responses/post-account-response.json','application/json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a2e497a7-ce0f-4710-b10d-c69d85247521">
+				<munit:payload value="#[output application/json --- readUrl('classpath://requests/post-account.json','application/json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\accounts:application\json:datastream-account-and-contact-system-api-config" doc:id="befc42d3-c81f-41e1-9525-7a6f8cefc259" name="post:\accounts:application\json:datastream-account-and-contact-system-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="14876fcb-59db-4705-9c1b-909f7b292412" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End of the flow Logger" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="09e776d6-d8db-4e11-a2da-a90244f4b3d2" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="datastream-account-and-contact-system-api-test-suite-post:\contacts:application\json:datastream-account-and-contact-system-api-configTest" doc:id="a313771d-f906-49ae-bc9c-060a1d25a5ad" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Query Contact" doc:id="28bd9a1a-6060-4a8a-bd6d-2ea16d8f1a23" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Query Contact" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="7d05f129-1d32-4567-9fc1-f4e3e0a52d97" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://responses/post-contact-response.json','application/json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a4f5081d-7208-47b6-a68e-048289951979">
+				<munit:payload value="#[output application/json --- readUrl('classpath://requests/post-contact.json','application/json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\contacts:application\json:datastream-account-and-contact-system-api-config" doc:id="82e35f90-4b29-49a6-a6e9-745080ca9331" name="post:\contacts:application\json:datastream-account-and-contact-system-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="2eaecc97-8455-4f91-b47f-33888dbbe6ed" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End of the flow Logger" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="928ff8f3-24a3-4b52-b962-04c717d16eaf" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+</mule>
