@@ -1,0 +1,1 @@
+p('sf.get.account.query') ++ " where Account_Id__c = '" ++ (vars.accountId default "AID-0201") ++ "'"

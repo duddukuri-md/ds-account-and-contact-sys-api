@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<sub-flow name="imp-process-get-accounts-SubFlow" doc:id="10f65956-2fb9-416a-bc8f-edd76731f2b4" >
+		<logger level="INFO" doc:name="Start of the flow Logger" doc:id="9b7e631f-aa63-44fd-972b-cbf773b7a47c" message='#[correlationId ++  "Account Id -" ++ vars.accountId ++  "Start of get Account  subflow"]'/>
+		<ee:transform doc:name="Set Request Params" doc:id="27c5dae6-3cf1-43fe-91d5-2ef31335ae98">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dwl/sfAccountQuery.dwl" variableName="sfQuery" />
+				</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="Query Contact" doc:id="8c38891a-05fc-46de-b4a6-8cd49b49d06a" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[#[vars.sfQuery]]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Contact Response mapping" doc:id="b08d7538-a3bc-44b5-b299-4054f1a52c6d" >
+			<ee:message >
+				<ee:set-payload resource="dwl/getAccountResponse.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Start of the flow Logger" doc:id="09c46101-5530-47cf-90d5-43ec0a13dca6" message='#[correlationId ++  "Account Id -" ++  vars.accountId ++   "End of get Account  subflow"]'/>
+	</sub-flow>
+	<sub-flow name="imp-process-post-accounts-SubFlow" doc:id="0da0bc0a-34c7-4259-b08b-261aa0b63f76" >
+		<logger level="INFO" doc:name="Start of the flow Logger" doc:id="cec80fbb-f4f9-4ffb-a760-b031f5b63017" message='#[correlationId ++ "Start of post Account  subflow"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="7e8965c3-18da-4a07-97e7-93f00a45355d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+---
+[{
+  // FirstName: payload.Name,
+   Name: payload.Name,
+    Account_Email__c: payload.accountEmail__c,
+    Email: payload.personalEmail__c,
+    "Billing_Address__c": payload.BillingAddress,
+    Description: payload.Description,
+    Phone: payload.Phone
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:upsert objectType="Account" externalIdFieldName="Account_Email__c" doc:name="Upsert Account" doc:id="15e306ee-4ab1-462c-b8d9-ea00f040585e" config-ref="Salesforce_Config" />
+		<ee:transform doc:name="create Contact Response mapping" doc:id="7ebbef31-5756-41f9-a1fc-a770795c9bf2">
+			<ee:message>
+				<ee:set-payload resource="dwl/postContactResponse.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Start of the flow Logger" doc:id="f77b43f0-d187-4528-a0d0-6eeab2d49338" message='#[correlationId ++ "End of post Account  subflow"]'/>
+	</sub-flow>
+</mule>
